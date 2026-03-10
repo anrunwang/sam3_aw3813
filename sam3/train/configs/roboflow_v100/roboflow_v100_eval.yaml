@@ -6,13 +6,13 @@ defaults:
 # Paths Configuration (Chage this to your own paths)
 # ============================================================================
 paths:
-  roboflow_vl_100_root: <YOUR_DATASET_DIR>
-  experiment_log_dir: <YOUR EXPERIMENET LOG_DIR>
-  bpe_path: <BPE_PATH> # This should be under sam3/assets/bpe_simple_vocab_16e6.txt.gz
+  roboflow_vl_100_root: /home/anthonywang/sam3/aw3813/eval-data
+  experiment_log_dir: /home/anthonywang/sam3/experiments/jellyfish_eval
+  bpe_path: /home/anthonywang/sam3/assets/bpe_simple_vocab_16e6.txt.gz # This should be under sam3/assets/bpe_simple_vocab_16e6.txt.gz
 
 # Roboflow dataset configuration
 roboflow_train:
-  num_images: 100 # Note: This is the number of images used for training. If null, all images are used.
+  num_images: NULL # Note: This is the number of images used for training. If null, all images are used.
   supercategory: ${all_roboflow_supercategories.${string:${submitit.job_array.task_index}}}
 
   # Training transforms pipeline
@@ -315,9 +315,10 @@ trainer:
   model:
     _target_: sam3.model_builder.build_sam3_image_model
     bpe_path: ${paths.bpe_path}
+    # checkpoint_path: /home/anthonywang/sam3/experiments/jellyfish_run1/checkpoints/checkpoint.pt # added
     device: cpus
     eval_mode: true
-    enable_segmentation: ${scratch.enable_segmentation} # Warning: Enable this if using segmentation.
+    enable_segmentation: ${scratch.enable_segmentation} # Warning: Enable this if using segmentation. ## changed 
 
   meters:
     val:
@@ -430,7 +431,7 @@ submitit:
   # Uncomment for job array configuration
   job_array:
     num_tasks: 100
-    task_index: 0
+    task_index: 76
 
 # ============================================================================
 # Available Roboflow Supercategories (for reference)
